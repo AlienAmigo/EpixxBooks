@@ -114,6 +114,7 @@ ready(function(){
       });
     myHTMLFragment.append(renderFooter(totalPrice));
     myProductCartHeader.parentElement.append(myHTMLFragment);
+    showTotalQty();
   }
 
   renderCart(myCard);
@@ -124,12 +125,36 @@ ready(function(){
   const myPriceFields = selectElements('.cart__item-price'); // все поля цены
   let myHeaderString = document.querySelector('.cart__title'); //поле кол-ва товаров в корзине (заголовок)
 
-  myHeaderString.textContent = `В корзине ${calcTotalQty(myCard)} товара`;
+
+  function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара
+    let suff = 'ов'; // суффикс слова «товаров»
+    switch (sum % 10) {
+      case 1: {
+        if (sum % 100 == 11) break;
+        suff = '';
+        break;
+      }
+      case 2: if (sum % 100 == 12) break;
+      case 3: if (sum % 100 == 13) break;
+      case 4:
+        if (sum % 100 == 14) break;
+        else {
+          suff = 'а';
+          break;
+       }
+    }
+    document.querySelector('.cart__title').textContent = `В корзине ${sum} товар${suff}`;
+  }
+
+  function changeQty() {//общая ф-ция для изменения кол-ва товара
+
+  }
 
   function changePlusBtn(elem, ind) { // ф-ция нажатия на кнопку +
     myQtyFields[ind].value = ++myCard[ind].qty;
     myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
     myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
+    showTotalQty();
   }
 
   function changeMinusBtn(elem, ind) { // ф-ция нажатия на кнопку –
@@ -137,6 +162,7 @@ ready(function(){
       myQtyFields[ind].value = --myCard[ind].qty;
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
       myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
+      showTotalQty();
     }
   }
 
