@@ -1,7 +1,153 @@
 ready(function(){
 
   // В этом месте должен быть написан ваш код
+  const myCard = [
+    {
+      descr: "",
+      img: "img/tsennye-resheniya.jpg",
+      imgAlt: '',
+      name: "Название какие-то очень длинное, совершенно невменяемое для книгоиздателя",
+      price: 512,
+      qty: 2,
+      totalItemPrice: 1024,
+    },
+    {
+      descr: "",
+      img: "img/tsennye-resheniya.jpg",
+      imgAlt: '',
+      name: "Название",
+      price: 999024,
+      qty: 1,
+      totalItemPrice: 999024,
+    }
+  ];
 
+  function calcTotalQty(Arr) { // подсчёт общего кол-ва единиц товара в корзине
+    let myTotalQty = 0;
+    Arr.forEach((item) => { myTotalQty += item.qty });
+    return myTotalQty;
+  }
+
+  function selectElements(item) {
+    return document.querySelectorAll(item);
+  }
+
+  const myHTMLFragment = document.createDocumentFragment();
+  let myProductCartHeader = document.querySelector('.cart__table-headers');
+
+  function renderItem(item) { // рендер отдельной карточки товара
+    let myTmpNode = document.createElement('table');
+    item.totalItemPrice = item.price * item.qty;
+    let myCardRow = `<tr class=\"cart__product\">
+      <td class=\"cart__col-1\">
+        <img class=\"cart__item-img\" src=\"${item['img']}\" alt=\"${item['imgAlt']}\">
+      </td>
+      <td class=\"cart__col-2\">
+        <div class=\"cart__item-name\">${item['name']}</div>
+      </td>
+      <td class=\"cart__col-3\">
+        <div class=\"field-num  field-num--bg-tran\">
+          <span class=\"field-num__input-wrap\">
+            <button class=\"field-num__btn-minus\" type=\"button\">-</button>
+            <input class=\"field-num__input\" type=\"number\" value=\"${item['qty']}\" step=\"1\" min=\"1\"/>
+            <button class=\"field-num__btn-plus\" type=\"button\">+</button>
+          </span>
+        </div>
+      </td>
+      <td class=\"cart__col-4\">
+        <span class=\"cart__item-price\">${item.totalItemPrice} ₽</span>
+      </td>
+      <td class=\"cart__col-5\">
+        <button class=\"close cart__product-del-btn\" type=\"button\">
+          <svg width=\"16\" height=\"16\">
+            <use xlink:href=\"#close\"></use>
+          </svg>
+        </button>
+      </td>
+    </tr>`;
+    myTmpNode.insertAdjacentHTML('beforeend', myCardRow);
+    let myNode = myTmpNode.querySelector('.cart__product');
+    return myNode;
+  }
+
+  function renderFooter(sum) { // рендер футера таблицы
+    let myTmpNode = document.createElement('table');
+    let myCardRow = `<tr>
+    <td class="cart__products-price" colspan="5">
+      Итого к оплате: <strong class="cart__products-price-num" id="cart-products-price-num">${sum} ₽</strong>
+    </td>
+  </tr>`;
+    myTmpNode.insertAdjacentHTML('beforeend', myCardRow);
+    let myNode = myTmpNode.querySelector('tr');
+    return myNode;
+  }
+
+  function renderCart(Arr) { // рендер всей корзины
+    let totalPrice = 0;
+    Arr.forEach((item) => {
+      totalPrice += item.totalItemPrice;
+      myHTMLFragment.append(renderItem(item));
+      });
+    myHTMLFragment.append(renderFooter(totalPrice));
+    myProductCartHeader.parentElement.append(myHTMLFragment);
+  }
+
+  renderCart(myCard);
+
+  const myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
+  const myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
+  const myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
+  const myPriceFields = selectElements('.cart__item-price'); // все поля цены
+  let myHeaderString = document.querySelector('.cart__title'); //поле кол-ва товаров в корзине (заголовок)
+
+  myHeaderString.textContent = `В корзине ${calcTotalQty(myCard)} товара`;
+
+  function changePlusBtn(elem, ind) { // ф-ция нажатия на кнопку +
+    myQtyFields[ind].value = ++myCard[ind].qty;
+    myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
+    myPriceFields[ind].textContent = myCard[ind].totalItemPrice + '  ₽';
+  }
+
+  function changeMinusBtn(elem, ind) { // ф-ция нажатия на кнопку –
+    if (myQtyFields[ind].value > 1) {
+      myQtyFields[ind].value = --myCard[ind].qty;
+      myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
+      myPriceFields[ind].textContent = myCard[ind].totalItemPrice + '  ₽';
+    }
+  }
+
+  function changeQtyField() { // ф-ция изменения текстового поля кол-ва товара
+
+  }
+
+  myPlusBtn.forEach((item, index) => { item.addEventListener('click', function() {changePlusBtn(item, index)}) });
+  myMinusBtn.forEach((item, index) => { item.addEventListener('click', function() {changeMinusBtn(item, index)}) });
+  myQtyFields.forEach((item, index) => { item.addEventListener('onchange', function() {}) });
+
+
+  // function selectElem(item, ) {
+  //   return item.querySelector(item);
+  // }
+
+  // function readCardItem(item) {
+  //   const myItem = {
+  //     name:'',
+  //     descr:'',
+  //     totalItemPrice: '',
+  //     price: '',
+  //     qty:'',
+  //     img:'',
+  //   }
+  //   myItem.name = item.querySelector('.cart__item-name').textContent;
+  //   myItem.totalItemPrice = parseInt((item.querySelector('.cart__item-price').textContent).replace(/\D+/g,""));
+  //   myItem.qty = parseInt(item.querySelector('.field-num__input').value);
+  //   myItem.price = +myItem.totalItemPrice / +myItem.qty;
+  //   // myItem.img = item.querySelector('.cart__item-name').textContent;
+  //   return myItem;
+  // }
+  // selectElements('.cart__product').forEach((item) => {
+  //   myCard.push(readCardItem(item));
+  // });
 
 
   // ВНИМАНИЕ!
