@@ -22,6 +22,30 @@ ready(function(){
     }
   ];
 
+  // Функция-конвертер вида суммы валюты
+  // расставляет нули между классами числа
+  // по умолчанию добавляет знак рубля через пробел
+
+  function convRUB(num, postfix = '₽') {
+    let myRez = num.toString();
+    if (myRez.match(/\d{4,}/g)) {
+      let myTmpRez;
+      do {
+        myTmpRez = myRez;
+        myRez = myRez.replace(/(\d+)(\d{3}(\s\d{3})*$)/g, '$1 $2');
+      }
+      while (myTmpRez != myRez);
+    }
+    if ((postfix != undefined) &&
+        (postfix.length) &&
+        (!postfix.match([/^[\s]+$/g]))
+        ) {
+      postfix = postfix.trim();
+      myRez = `${myRez} ${postfix}`;
+    }
+    return myRez;
+  }
+
   function calcTotalQty(Arr) { // подсчёт общего кол-ва единиц товара в корзине
     let myTotalQty = 0;
     Arr.forEach((item) => { myTotalQty += item.qty });
@@ -55,7 +79,7 @@ ready(function(){
         </div>
       </td>
       <td class=\"cart__col-4\">
-        <span class=\"cart__item-price\">${item.totalItemPrice} ₽</span>
+        <span class=\"cart__item-price\">${convRUB(item.totalItemPrice)}</span>
       </td>
       <td class=\"cart__col-5\">
         <button class=\"close cart__product-del-btn\" type=\"button\">
@@ -74,7 +98,7 @@ ready(function(){
     let myTmpNode = document.createElement('table');
     let myCardRow = `<tr>
     <td class="cart__products-price" colspan="5">
-      Итого к оплате: <strong class="cart__products-price-num" id="cart-products-price-num">${sum} ₽</strong>
+      Итого к оплате: <strong class="cart__products-price-num" id="cart-products-price-num">${convRUB(sum)}</strong>
     </td>
   </tr>`;
     myTmpNode.insertAdjacentHTML('beforeend', myCardRow);
@@ -105,14 +129,14 @@ ready(function(){
   function changePlusBtn(elem, ind) { // ф-ция нажатия на кнопку +
     myQtyFields[ind].value = ++myCard[ind].qty;
     myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
-    myPriceFields[ind].textContent = myCard[ind].totalItemPrice + '  ₽';
+    myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
   }
 
   function changeMinusBtn(elem, ind) { // ф-ция нажатия на кнопку –
     if (myQtyFields[ind].value > 1) {
       myQtyFields[ind].value = --myCard[ind].qty;
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
-      myPriceFields[ind].textContent = myCard[ind].totalItemPrice + '  ₽';
+      myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
     }
   }
 
