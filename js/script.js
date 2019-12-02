@@ -22,6 +22,26 @@ ready(function(){
     }
   ];
 
+  // список сообщений popup
+  const myMessages = {
+    wrongQty: 'Можно заказать только от 1 до 10 единиц одного товара',
+    wrongQtyFiledVal: 'Нужно ввести число',
+  };
+
+  // Управляющие эл-ты
+  let myProductCartTable = document.querySelector('.cart__table');
+  let myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
+  let myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
+  let myDelBnt = selectElements('.cart__product-del-btn'); // все кнопки X (удаления товара из корзины)
+  let myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
+  let myPriceFields = selectElements('.cart__item-price'); // все поля цены
+  let myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
+
+  // ф-ция вызова popup'а (пока через alert)
+  function showAlert(message) {
+    alert(message);
+  }
+
   // Функция-конвертер вида суммы валюты
   // расставляет нули между классами числа
   // по умолчанию добавляет знак рубля через пробел
@@ -56,13 +76,6 @@ ready(function(){
     return document.querySelectorAll(item);
   }
 
-  let myProductCartTable = document.querySelector('.cart__table');
-  let myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
-  let myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
-  let myDelBnt = selectElements('.cart__product-del-btn'); // все кнопки X (удаления товара из корзины)
-  let myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
-  let myPriceFields = selectElements('.cart__item-price'); // все поля цены
-
   // рендер отдельной карточки товара
   function renderItem(item) {
     let myTmpNode = document.querySelector('.tmp__card-row').content.cloneNode(true);
@@ -84,13 +97,11 @@ ready(function(){
 
   // рендер всей корзины
   function renderCart(Arr) {
-    // удаляем предыдущие эл-ты из корзины
-    myProductCartTable.innerHTML = '';
+    myProductCartTable.innerHTML = ''; // удаляем предыдущие эл-ты из корзины
     let myHTMLFragment = document.createDocumentFragment();
-    // добавляем шапку таблицы из шаблона
-    myHTMLFragment.append(document.querySelector('.tmp__table-header').content.cloneNode(true));
-    Arr.forEach((item) => { myHTMLFragment.append(renderItem(item)); });
-    myHTMLFragment.append(renderFooter(calcTotalPrice(myCard)));
+    myHTMLFragment.append(document.querySelector('.tmp__table-header').content.cloneNode(true)); // добавляем шапку таблицы из шаблона
+    Arr.forEach((item) => { myHTMLFragment.append(renderItem(item)); }); // добавляем все товары из объекта
+    myHTMLFragment.append(renderFooter(calcTotalPrice(myCard))); //добавляем футер
     myProductCartTable.append(myHTMLFragment);
     showTotalQty();
     refreshElements();
@@ -105,11 +116,12 @@ ready(function(){
     myDelBnt = selectElements('.cart__product-del-btn'); // все кнопки X (удаления товара из корзины)
     myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
     myPriceFields = selectElements('.cart__item-price'); // все поля цены
+    myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
 
-    myPlusBtn.forEach((item, index) => { item.addEventListener('click', function() {changePlusBtn(item, index)}) } );
-    myMinusBtn.forEach((item, index) => { item.addEventListener('click', function() {changeMinusBtn(item, index)}) } );
-    myDelBnt.forEach((item, index) => { item.addEventListener('click', function() {deleteItem(item, index)}) } );
-    myQtyFields.forEach((item, index) => { item.addEventListener('onchange', function() {}) });
+    myPlusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty+1); }) } );
+    myMinusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty-1); }) } );
+    myDelBnt.forEach( (item, index) => { item.addEventListener('click', function() { deleteItem(index) }) } );
+    myQtyFields.forEach( (item, index) => { item.addEventListener('onchange', function() { changeQty(index, item.value) }) });
   }
 
   function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара
@@ -133,35 +145,29 @@ ready(function(){
     document.querySelector('.cart__title').textContent = `В корзине ${sum} товар${suff}`;
   }
 
-  function deleteItem(elem, ind) { //ф-ция удаления одного наименования
+  function deleteItem(ind) { //ф-ция удаления одного наименования
     myCard.splice(ind,1);
     renderCart(myCard);
   }
 
-  function changeQty(elem, ind, newQty) {//общая ф-ция для изменения кол-ва товара
-    if ((newQty > 1) && (newQty <= 10)) {
-
-    }
-  }
-
-  function changePlusBtn(elem, ind) { // ф-ция нажатия на кнопку +
-    myQtyFields[ind].value = ++myCard[ind].qty;
-    myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
-    myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
-    showTotalQty();
-  }
-
-  function changeMinusBtn(elem, ind) { // ф-ция нажатия на кнопку –
-    if (myQtyFields[ind].value > 1) {
-      myQtyFields[ind].value = --myCard[ind].qty;
+  function changeQty(ind, newQty) {//общая ф-ция для изменения кол-ва товара
+    if ((newQty >= 1) && (newQty <= 10)) {
+      myQtyFields[ind].value = newQty;
+      myCard[ind].qty = newQty;
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
       myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
       showTotalQty();
+      myTotalPriceField.textContent = convRUB(calcTotalPrice(myCard));
+    }
+    else {
+      showAlert(myMessages.wrongQty);
     }
   }
 
-  function changeQtyField() { // ф-ция изменения текстового поля кол-ва товара
-
+  function changeQtyField(ind, newQty) { // ф-ция изменения текстового поля кол-ва товара
+    if (newQty.trim().match(/[\d]+/g)) { changeQty(ind, newQty); }
+    else { showAlert(myMessages.wrongQtyFiledVal); }
+    myQtyFields[ind].value = myCard[ind].qty;
   }
 
   // ВНИМАНИЕ!
