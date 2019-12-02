@@ -25,23 +25,15 @@ ready(function(){
   // Функция-конвертер вида суммы валюты
   // расставляет нули между классами числа
   // по умолчанию добавляет знак рубля через пробел
-
   function convRUB(num, postfix = '₽') {
     let myRez = num.toString();
     if (myRez.match(/\d{4,}/g)) {
-      let myTmpRez;
-      do {
-        myTmpRez = myRez;
+      while (myRez.replace(/(\d+)(\d{3}(\s\d{3})*$)/g, '$1 $2') != myRez) {
         myRez = myRez.replace(/(\d+)(\d{3}(\s\d{3})*$)/g, '$1 $2');
       }
-      while (myTmpRez != myRez);
     }
-    if ((postfix != undefined) &&
-        (postfix.length) &&
-        (!postfix.match([/^[\s]+$/g]))
-        ) {
-      postfix = postfix.trim();
-      myRez = `${myRez} ${postfix}`;
+    if ((postfix != undefined) && (postfix.length) && (!postfix.match([/^[\s]+$/g]))) {
+      myRez = `${myRez} ${postfix.trim()}`;
     }
     return myRez;
   }
@@ -56,8 +48,12 @@ ready(function(){
     return document.querySelectorAll(item);
   }
 
-  const myHTMLFragment = document.createDocumentFragment();
-  let myProductCartHeader = document.querySelector('.cart__table-headers');
+  let myProductCartTable = document.querySelector('.cart__table');
+  let myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
+  let myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
+  let myDelBnt = selectElements('.cart__product-del-btn'); // все кнопки X (удаления товара из корзины)
+  let myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
+  let myPriceFields = selectElements('.cart__item-price'); // все поля цены
 
   function renderItem(item) { // рендер отдельной карточки товара
     let myTmpNode = document.createElement('table');
@@ -107,6 +103,16 @@ ready(function(){
   }
 
   function renderCart(Arr) { // рендер всей корзины
+    // удаляем предыдущие эл-ты из корзины
+    myProductCartTable.innerHTML = `<tr class="cart__table-headers">
+        <th class="cart__col-1"></th>
+        <th class="cart__col-2">Товар</th>
+        <th class="cart__col-3">Кол-во</th>
+        <th class="cart__col-4">Цена</th>
+        <th class="cart__col-5"></th>
+      </tr>`;
+    let myProductCartHeader = document.querySelector('.cart__table-headers'); // загловок корзины
+    let myHTMLFragment = document.createDocumentFragment();
     let totalPrice = 0;
     Arr.forEach((item) => {
       totalPrice += item.totalItemPrice;
@@ -115,15 +121,27 @@ ready(function(){
     myHTMLFragment.append(renderFooter(totalPrice));
     myProductCartHeader.parentElement.append(myHTMLFragment);
     showTotalQty();
+    refreshElements();
   }
 
   renderCart(myCard);
 
-  const myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
-  const myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
-  const myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
-  const myPriceFields = selectElements('.cart__item-price'); // все поля цены
-  let myHeaderString = document.querySelector('.cart__title'); //поле кол-ва товаров в корзине (заголовок)
+
+  function refreshElements() { //обновляет управляющие эл-ты
+    myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
+    console.log();
+    myMinusBtn = selectElements('.field-num__btn-minus'); // все кнопки –
+    myDelBnt = selectElements('.cart__product-del-btn'); // все кнопки X (удаления товара из корзины)
+    myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
+    myPriceFields = selectElements('.cart__item-price'); // все поля цены
+
+    myPlusBtn.forEach((item, index) => { item.addEventListener('click', function() {changePlusBtn(item, index)}) } );
+    myMinusBtn.forEach((item, index) => { item.addEventListener('click', function() {changeMinusBtn(item, index)}) } );
+    myDelBnt.forEach((item, index) => { item.addEventListener('click', function() {deleteItem(item, index)}) } );
+    myQtyFields.forEach((item, index) => { item.addEventListener('onchange', function() {}) });
+  }
+
+  // let myHeaderString = document.querySelector('.cart__title'); //поле кол-ва товаров в корзине (заголовок)
 
 
   function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара
@@ -143,10 +161,16 @@ ready(function(){
           break;
        }
     }
+    if(sum == 0) { sum = 'нет'; };
     document.querySelector('.cart__title').textContent = `В корзине ${sum} товар${suff}`;
   }
 
-  function changeQty() {//общая ф-ция для изменения кол-ва товара
+  function deleteItem(elem, ind) { //ф-ция удаления одного наименования
+    myCard.splice(ind,1);
+    renderCart(myCard);
+  }
+
+  function changeQty(elem, ind, newQty) {//общая ф-ция для изменения кол-ва товара
 
   }
 
@@ -169,11 +193,6 @@ ready(function(){
   function changeQtyField() { // ф-ция изменения текстового поля кол-ва товара
 
   }
-
-  myPlusBtn.forEach((item, index) => { item.addEventListener('click', function() {changePlusBtn(item, index)}) });
-  myMinusBtn.forEach((item, index) => { item.addEventListener('click', function() {changeMinusBtn(item, index)}) });
-  myQtyFields.forEach((item, index) => { item.addEventListener('onchange', function() {}) });
-
 
   // function selectElem(item, ) {
   //   return item.querySelector(item);
