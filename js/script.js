@@ -37,6 +37,9 @@ ready(function(){
   let myPriceFields = selectElements('.cart__item-price'); // все поля цены
   let myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
 
+  let PromoCode = 10%;
+  let myTotalPrice = 0; // Цена за все товары в корзине с учетом скидки промо-кода 
+
   // ф-ция вызова popup'а (пока через alert)
   function showAlert(message) {
     alert(message);
