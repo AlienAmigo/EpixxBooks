@@ -26,6 +26,16 @@ ready(function(){
   const myMessages = {
     wrongQty: 'Можно заказать только от 1 до 10 единиц одного товара',
     wrongQtyFiledVal: 'Нужно ввести число',
+    wrongName: '',
+    wrongPhone: '',
+    wrong: '',
+  };
+
+  const myRegEx = {
+    firstName: /^\W[а-яА-я0-9\-]+\W$/gim,
+    lastName: /^\W[а-яА-я0-9\-]+\W$/gim,
+    phone: /?:(?<=\s)|(?<=^)|(?<=\b))(\+?\s?(\d)\s?\(?(\d{3})\)?\s?(\d{3})\s?\-?\s?(\d{2})\s?\-?\s?(\d{2}))/gim,
+    email: /\b[\w\-\.$]+@[\w\-\.]+\.[a-z]{1,3}\b/gim,
   };
 
   // Управляющие эл-ты
@@ -37,7 +47,13 @@ ready(function(){
   let myPriceFields = selectElements('.cart__item-price'); // все поля цены
   let myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
 
-  let PromoCode = 10%;
+  let myFormFirstName = document.querySelector('input[name="firstname"]');
+  let myFormLastName = document.querySelector('input[name="lastname"]');
+  let myFormPhone = document.querySelector('input[name="phone"]');
+  let myFormMail = document.querySelector('input[type="email"]');
+ 
+
+  // let PromoCode = 10%;
   let myTotalPrice = 0; // Цена за все товары в корзине с учетом скидки промо-кода 
 
   // ф-ция вызова popup'а (пока через alert)
@@ -172,6 +188,15 @@ ready(function(){
     else { showAlert(myMessages.wrongQtyFiledVal); }
     myQtyFields[ind].value = myCard[ind].qty;
   }
+
+
+  function checkFormField(obj, regEx, msg) { // ф-ция проверки поля ввода формы
+    let myText = obj.value.trim;
+    if (myText.match(regEx)) {
+
+     }
+    else showAlert(msg);
+  };
 
   // ВНИМАНИЕ!
   // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
