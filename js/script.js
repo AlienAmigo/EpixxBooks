@@ -39,7 +39,9 @@ ready(function(){
   let myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
   let myPriceFields = selectElements('.cart__item-price'); // все поля цены
   let myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
-
+  let myClearBtn = document.querySelector('.cart__clear-btn'); // кнопка очистки корзины
+  myClearBtn.addEventListener('click', clearCard);
+  
   let myFormFirstName = document.querySelector('input[name="firstname"]'); // поле имени
   let myFormLastName = document.querySelector('input[name="lastname"]'); // поле фамилии
   let myFormPhone = document.querySelector('input[name="phone"]'); // поле телефона
@@ -131,12 +133,12 @@ ready(function(){
     myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
     myPriceFields = selectElements('.cart__item-price'); // все поля цены
     myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
-
+    
     myPlusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty+1); }) } );
     myMinusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty-1); }) } );
     myDelBnt.forEach( (item, index) => { item.addEventListener('click', function() { deleteItem(index) }) } );
     myQtyFields.forEach( (item, index) => { item.addEventListener('change', function() { changeQty(index, item.value) }) });
-  }
+    }
 
   function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара
     let suff = 'ов'; // суффикс слова «товаров»
@@ -165,9 +167,9 @@ ready(function(){
   }
 
   function changeQty(ind, newQty) {//общая ф-ция для изменения кол-ва товара
-    if ((newQty >= 1) && (newQty <= 10)) {
-      myQtyFields[ind].value = newQty;
-      myCard[ind].qty = newQty;
+    if ((newQty >= 1) && (newQty <= 10) && (newQty != '-0')) {
+      myQtyFields[ind].value = +newQty;
+      myCard[ind].qty = +newQty;
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
       myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
       showTotalQty();
@@ -183,6 +185,13 @@ ready(function(){
     else { showAlert(myMessages.wrongQtyFiledVal); }
     myQtyFields[ind].value = myCard[ind].qty;
   }
+
+  function clearCard() {
+    for (i = myCard.length-1; i >= 0; i--) { myCard.splice(i, 1);}
+    // myCard.forEach( (item, index, arr) => { arr.splice(index, 1); });
+    renderCart(myCard);
+  }
+
 
 
   // ВНИМАНИЕ!
