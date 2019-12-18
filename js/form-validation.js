@@ -1,9 +1,13 @@
+<<<<<<< HEAD
   function showAlert(message) {
     alert(message);
   }
 
 // эл-ты формы, собранные в массив
 
+=======
+// эл-ты формы, собранные в массив
+>>>>>>> origin/checkForm
 const myFormElem = [
   {
     name: 'firstName',
@@ -42,6 +46,7 @@ let myFieldCheckedStyle = 'field-text--input-checked';
 // };
 
 // вешаем обработчики событий на эл-ты формы
+<<<<<<< HEAD
 // myFormElem.forEach((item, index) => {
 //     addEventListener('blur', function() {
 //       checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
@@ -50,6 +55,16 @@ let myFieldCheckedStyle = 'field-text--input-checked';
 //       checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
 //     });
 //   });
+=======
+myFormElem.forEach((item, index) => {
+    addEventListener('blur', function() { 
+      checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg); 
+    });
+    addEventListener('change', function() { 
+      checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg); 
+    });
+  });
+>>>>>>> origin/checkForm
 
 
 function checkFormField(obj, regExp, okStyle, msg) { // ф-ция проверки поля ввода формы
