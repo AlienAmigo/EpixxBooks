@@ -1,8 +1,9 @@
 let myCatalog = document.querySelector('.catalog__books-list');
 let myBookTmp = document.querySelector('.tmp-book-card');
 
-function renderBookItem(item) {
+function renderBookItem(item, index) {
   let myTmpNode = myBookTmp.content.cloneNode(true);
+  let 
   myTmpNode.querySelector('.card__img').src = `/img/books/${item["uri"]}.jpg`;
   myTmpNode.querySelector('.card__img').alt = item.name;
   myTmpNode.querySelector('.card__title').textContent = item.name;
@@ -12,7 +13,8 @@ function renderBookItem(item) {
 }
 
 function renderBooks() {
+  books.forEach( (item, index, obj) => { 
+    myCatalog.appendChild(renderBookItem(item, index));
+  });
 
 }
-
-console.log(books[2]);
