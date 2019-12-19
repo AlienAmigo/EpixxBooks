@@ -1,4 +1,9 @@
+  function showAlert(message) {
+    alert(message);
+  }
+
 // эл-ты формы, собранные в массив
+
 const myFormElem = [
   {
     name: 'firstName',
