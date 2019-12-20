@@ -1,3 +1,12 @@
+// ОТКРЫТИЕ-ЗАКРЫТИЕ МЕНЮ ФИЛЬТРОВ
+let myFilters = document.querySelector('#filters');
+let myFiltersTrigger = document.querySelector('#filters-trigger');
+if (myFilters && myFiltersTrigger) {
+  myFiltersTrigger.addEventListener('click', function() {
+    myFilters.classList.toggle('filters--open');
+  });
+}
+
 
 
 let myCatalog = document.querySelector('.catalog__books-list');
@@ -9,8 +18,8 @@ function showBookModal(item) {
 
 function renderBookItem(item, index) {
   let myTmpNode = myBookTmp.content.cloneNode(true);
-  let
-  myTmpNode.querySelector()
+  // let
+  // myTmpNode.querySelector()
   myTmpNode.querySelector('.card__img').src = `/img/books/${item["uri"]}.jpg`;
   myTmpNode.querySelector('.card__img').alt = item.name;
   myTmpNode.querySelector('.card__title').textContent = item.name;

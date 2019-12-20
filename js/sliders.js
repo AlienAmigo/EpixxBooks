@@ -1,6 +1,6 @@
 var glide = new Glide('#popular-slider', {
   type: 'carousel',
-  focusAt: 2,
+  focusAt: 'center',
   perView: 4,
 })
 

@@ -1057,8 +1057,8 @@ textarea.field-text__input {
     margin-bottom: 15px; }
 .filters {
   position: relative; }
-.filters--open {
-
+.filters--open .filters__drop{ /* PETE!!!! */
+  display: flex;
 }
 .filters .field-text__input:not([disabled]) {
     background-color: transparent; }
@@ -2094,6 +2094,7 @@ a.pagination__item:hover, a.pagination__item:focus {
               align-items: baseline;
       padding-bottom: 25px; }
     .filters__drop {
+      display: none; /* PETE!!!! */
       padding-bottom: 20px; }
       .modal__dialog {
         width: 720px;
