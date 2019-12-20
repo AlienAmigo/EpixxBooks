@@ -64,4 +64,4 @@ const popupLibrary = {
   }
 };
 
-popupLibrary.init(myPopupTrigger);
+// popupLibrary.init(myPopupTrigger);

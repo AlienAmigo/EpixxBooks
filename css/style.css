@@ -1057,6 +1057,9 @@ textarea.field-text__input {
     margin-bottom: 15px; }
 .filters {
   position: relative; }
+.filters--open {
+
+}
 .filters .field-text__input:not([disabled]) {
     background-color: transparent; }
 .filters__trigger {
@@ -1642,10 +1645,10 @@ a.pagination__item:hover, a.pagination__item:focus {
 .popular__slider-btn:hover, .popular__slider-btn:focus {
     outline: none; }
 .popular__slider-btn svg {
-    position: absolute;
-    top: 50%;
+    /*position: absolute;*/
+/*    top: 75%;
     -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
+            transform: translateY(-50%);*/
     fill: #bfbfbf; }
 .popular__slider-btn--left {
     left: 0; }
@@ -1655,8 +1658,10 @@ a.pagination__item:hover, a.pagination__item:focus {
       top: 0;
       bottom: 0;
       left: 0;
-      width: 37px;
-      border: 2px solid #bfbfbf; }
+      width: 44px;
+      height: 44px;
+      border: 2px solid #bfbfbf;
+      border-radius: 22px; }
 .popular__slider-btn--left svg {
       left: 17px; }
 .popular__slider-btn--right {
@@ -1667,8 +1672,10 @@ a.pagination__item:hover, a.pagination__item:focus {
       top: 0;
       bottom: 0;
       right: 0;
-      width: 37px;
-      border: 2px solid #bfbfbf; }
+      width: 44px;
+      height: 44px;
+      border: 2px solid #bfbfbf;
+      border-radius: 22px; }
 .popular__slider-btn--right svg {
       right: 16px; }
 .product {
