@@ -42,7 +42,7 @@ ready(function(){
 
   // ф-ция вызова popup'а (пока через alert)
   function showAlert(message) {
-    alert(message);
+    console.log(message);
   }
 
   // подсчёт общего кол-ва единиц товаров в корзине
@@ -60,7 +60,7 @@ ready(function(){
   }
 
   function selectElements(item) {
-    return document.querySelectorAll(item);
+    return [].slice.apply(document.querySelectorAll(item));
   }
 
   // рендер отдельной карточки товара
@@ -96,6 +96,14 @@ ready(function(){
 
   renderCart(myCard);
 
+  const cartElement = document.querySelector('.cart');
+  cartElement.addEventListener('change', e => {
+      const { target } = e;
+
+      const id = target.dataset.id;
+      validation(id);
+  });
+
 
   function refreshElements() { //обновляет управляющие эл-ты
     myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
@@ -108,7 +116,7 @@ ready(function(){
     myPlusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty+1); }) } );
     myMinusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty-1); }) } );
     myDelBnt.forEach( (item, index) => { item.addEventListener('click', function() { deleteItem(index) }) } );
-    myQtyFields.forEach( (item, index) => { item.addEventListener('onchange', function() { changeQty(index, item.value) }) });
+    myQtyFields.forEach( (item, index) => { item.addEventListener('change', function() { changeQty(index, item.value) }) });
   }
 
   function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара

@@ -1,6 +1,7 @@
 // ОТКРЫТИЕ-ЗАКРЫТИЕ МЕНЮ ФИЛЬТРОВ
 let myFilters = document.querySelector('#filters');
 let myFiltersTrigger = document.querySelector('#filters-trigger');
+
 if (myFilters && myFiltersTrigger) {
   myFiltersTrigger.addEventListener('click', function() {
     myFilters.classList.toggle('filters--open');
@@ -50,9 +51,23 @@ function renderBookItem(item, index) {
   return myTmpNode;
 }
 
+const catalog = document.querySelector('[data-catalog]');
+catalog.addEventListener('click', e => {
+  const { target } = e;
+  const card = target.closest('.card');
+  const id = card.dataset.id
+
+  console.log(card);
+
+  if (card) {
+    openModal(id);
+  } else if (card) {
+    addCart(id);
+  }
+})
+
 function renderBooks() {
   books.forEach( (item, index, obj) => {
     myCatalog.appendChild(renderBookItem(item, index));
   });
-
 }

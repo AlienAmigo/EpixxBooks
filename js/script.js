@@ -10,6 +10,7 @@ ready(function(){
         myRez = myRez.replace(/(\d+)(\d{3}(\s\d{3})*$)/g, '$1 $2');
       }
     }
+    
     if ((postfix != undefined) && (postfix.length) && (!postfix.match([/^[\s]+$/g]))) {
       myRez = `${myRez} ${postfix.trim()}`;
     }

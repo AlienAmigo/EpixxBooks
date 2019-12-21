@@ -1,8 +1,12 @@
   function showAlert(message) {
-    alert(message);
+    console.log(message);
   }
 
 // эл-ты формы, собранные в массив
+const form = document.querySelector('.form');
+form.addEventListener('submit', e => {
+  e.preventDefault();   
+});
 
 const myFormElem = [
   {
@@ -43,13 +47,13 @@ let myFieldCheckedStyle = 'field-text--input-checked';
 
 // вешаем обработчики событий на эл-ты формы
 myFormElem.forEach((item, index) => {
-    addEventListener('blur', function() {
-      checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
-    });
-    addEventListener('change', function() {
-      checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
-    });
+  addEventListener('blur', function() {
+    checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
   });
+  addEventListener('change', function() {
+    checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
+  });
+});
 
 
 function checkFormField(obj, regExp, okStyle, msg) { // ф-ция проверки поля ввода формы
