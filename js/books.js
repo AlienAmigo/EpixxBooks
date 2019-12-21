@@ -13,6 +13,10 @@ let myModal = document.querySelector('#modal-book-view');
 let myModalWindow = document.querySelector('.modal__dialog');
 let myModalClose = document.querySelector('.modal__close');
 
+function openModal(item) {
+  myModal.classList.add('modal--open');
+}
+
 function closeModal() {
   myModal.classList.remove('modal--open');
 }
@@ -28,12 +32,10 @@ if (myModal && myModalClose) {
   myModalClose.addEventListener('click', closeModal );
 }
 
+// РЕНДЕР КНИГ
 let myCatalog = document.querySelector('.catalog__books-list');
 let myBookTmp = document.querySelector('.tmp-book-card');
 
-function showBookModal(item) {
-
-}
 
 function renderBookItem(item, index) {
   let myTmpNode = myBookTmp.content.cloneNode(true);
