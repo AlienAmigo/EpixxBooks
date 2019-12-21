@@ -8,6 +8,25 @@ if (myFilters && myFiltersTrigger) {
 }
 
 
+// ОТКРЫТИЕ-ЗАКРЫТИЕ МОДАЛКИ
+let myModal = document.querySelector('#modal-book-view');
+let myModalWindow = document.querySelector('.modal__dialog');
+let myModalClose = document.querySelector('.modal__close');
+
+function closeModal() {
+  myModal.classList.remove('modal--open');
+}
+
+if (myModalWindow) {
+  myModalWindow.addEventListener('click', function(ev) {
+    ev.stopPropagation();
+  });
+}
+
+if (myModal && myModalClose) {
+  myModal.addEventListener('click', closeModal );
+  myModalClose.addEventListener('click', closeModal );
+}
 
 let myCatalog = document.querySelector('.catalog__books-list');
 let myBookTmp = document.querySelector('.tmp-book-card');
