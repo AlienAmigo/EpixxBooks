@@ -536,7 +536,7 @@
           </div>
         </section>
         <!-- Дописать modal--open для показа именного этого модального окна (плюс дописать на html класс js-modal-open)-->
-        <div class="modal modal--open" id="modal-book-view" tabindex="-1" role="dialog">
+        <div class="modal" id="modal-book-view" tabindex="-1" role="dialog">
           <div class="modal__dialog" role="document">
             <div class="modal__content">
               <button class="modal__close" data-dismiss="modal" aria-label="Закрыть">
@@ -656,10 +656,10 @@
     <script src="js/choices.min.js"></script>
     <script src="js/nouislider.min.js"></script>
     <script src="js/glide.min.js"></script>
-    <script src="js/popup.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/books.js"></script>
-    <script src="js/sliders.js"></script>
+    <!-- <script src="js/popup.js"></script> -->
+    <script type='module' src="app/script.js"></script>
+<!--     <script src="js/books.js"></script>
+    <script src="js/sliders.js"></script> -->
 
     <div class="modal__backdrop"></div>
   </body>

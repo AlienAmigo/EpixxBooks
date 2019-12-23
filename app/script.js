@@ -1,4 +1,11 @@
+import funcBooks from '../modules/books.js'
+import funcPopup from '../modules/popup.js'
+import funcSliders from '../modules/sliders.js'
+
 ready(function(){
+  funcPopup();
+  funcBooks();
+  funcSliders();
 
 
   // Функция-конвертер вида суммы валюты
