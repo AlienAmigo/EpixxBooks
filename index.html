@@ -276,7 +276,7 @@
           <div class="catalog__inner">
             <h1 class="catalog__title">Каталог книг</h1>
             <div class="catalog__books-list" data-catalog>
-              <article class="card">
+<!--               <article class="card">
                 <a class="card__inner" href="index.html#klienty-na-vsyu-zhizn">
                   <img class="card__img" src="img/klienty-na-vsyu-zhizn.jpg" width="148" height="208" alt="Клиенты на всю жизнь"/>
                   <h2 class="card__title">Клиенты на всю жизнь</h2>
@@ -381,7 +381,7 @@
                   </svg>
                   <span>В корзину</span>
                 </button>
-              </article>
+              </article> -->
             </div>
             <div class="pagination" aria-label="Page navigation">
               <a class="pagination__item  pagination__item--arrow-left" href="/0">
@@ -504,6 +504,7 @@
                       <a class="card__inner" href="index.html#na-kryuchke">
                         <img class="card__img" src="img/na-kryuchke.jpg" width="148" height="208" alt="На крючке"/>
                         <h2 class="card__title">На крючке</h2>
+                        <span class="card__new">new</span>
                         <p class="card__price">1000 ₽</p>
                       </a>
                       <button class="btn  btn--sm card__buy">
@@ -653,6 +654,22 @@
         </footer>
       </div>
     </div>
+    <template class="tmp-book-card">
+      <article class="card">
+        <a class="card__inner" href="index.html#iskrenniy-servis">
+          <img class="card__img" src="img/iskrenniy-servis.jpg" width="148" height="208" alt="Искренний сервис"/>
+          <h2 class="card__title">Искренний сервис</h2>
+          <span class="card__new">new</span>
+          <p class="card__price">642 ₽</p>
+        </a>
+        <button class="btn  btn--sm card__buy">
+          <svg class="btn__icon" width="14" height="14">
+            <use xlink:href="#plus"></use>
+          </svg>
+          <span>В корзину</span>
+        </button>
+      </article>
+    </template>
     <script src="js/choices.min.js"></script>
     <script src="js/nouislider.min.js"></script>
     <script src="js/glide.min.js"></script>

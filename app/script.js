@@ -1,12 +1,12 @@
 import funcBooks from '../modules/books.js'
 import funcPopup from '../modules/popup.js'
 import funcSliders from '../modules/sliders.js'
+// import func
 
 ready(function(){
-  funcPopup();
-  funcBooks();
-  funcSliders();
 
+  // ОБЩИЕ ФУНКЦИИ
+  funcPopup();
 
   // Функция-конвертер вида суммы валюты
   // расставляет нули между классами числа
@@ -24,6 +24,9 @@ ready(function(){
     }
     return myRez;
   }
+
+  funcBooks();
+  funcSliders();
 
   // ВНИМАНИЕ!
   // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
