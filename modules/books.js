@@ -34,10 +34,12 @@ const  funcBooks = () => {
     const { target } = e;
     const card = target.closest('.card');
     const id = card.dataset.id
+    const button = card.querySelector('.card__buy');
+    const button_span = card.querySelector('.card__buy span');
 
-    console.log(card);
+    console.log(target);
 
-    if ( (card) && target !=) {
+    if ( (card) && target != button && target != button_span) {
       openModal(id);
     } else if (card) {
       addCart(id);
@@ -54,8 +56,7 @@ const  funcBooks = () => {
            .then( json => {
             let item = (myCardsNum * (myPageNum - 1))  + i;
               if (item < json.length - 1) {
-                console.log(json[item].name);
-                myCatalog.appendChild( renderBookItem(json[item]) );
+                myCatalog.appendChild( renderBookItem(json[item]));
               }
            })
            .catch (e => {
@@ -65,43 +66,6 @@ const  funcBooks = () => {
   }
 
   renderBooks();
-
-//   async function getData(url) {
-//     return await fetch(url)
-//       .then( response => {
-//         return response.json()
-//       })
-//       .then( json => {
-//         // rez = json
-//         console.log(json[4].name);
-//         console.log(json[4].name);
-//         return json;
-//       })
-//       .catch (e => {
-//         console.log(e)
-//       });
-//       return json
-//    }
-// getData(url)
-
-// async function getUserAsync(name) {
-//   const url = `https://api.github.com/users/${name}`;
-
-//   return await fetch(url)
-//     .then(async (response) => {
-//       return await response.json()
-//     })
-// }
-//   const fn = async () => {
-//     const data = await getUserAsync('sgkuksov');
-//     console.log(data);
-//     return data;
-//   };
-
-// console.log(fn());
-
-  // let a = getUserAsync('sgkuksov');
-  //     console.log(a)
 
 
   // ОТКРЫТИЕ-ЗАКРЫТИЕ МЕНЮ ФИЛЬТРОВ
@@ -121,7 +85,31 @@ const  funcBooks = () => {
   let myModalClose = document.querySelector('.modal__close');
 
   function openModal(item) {
-    myModal.classList.add('modal--open');
+    (async () => {
+      await fetch(url)
+        .then( response => {
+          return response.json()
+        })
+        .then( json => {
+          let card = json.find(elem => {
+            return (elem.uri == item);
+          });
+        myModal.querySelector('.product__img-wrap img').src = `/img/books/${card["uri"]}.jpg`;
+        myModal.querySelector('.product__img-wrap img').alt = card.name;
+        myModal.querySelector('.product__title').textContent = card.name;
+        // myModal.querySelector('#modal-author').textContent = card.author;
+        myModal.querySelector('.product__descr').querySelector('p').textContent = card.desc;
+        myModal.querySelector('.btn--price').innerHTML = convRUB(card.price) + `                      <span class="btn__sm-text">
+                        <svg class="btn__icon" width="14" height="14">
+                          <use xlink:href="#plus"></use>
+                        </svg>
+                        <span>В корзину</span>`;
+        myModal.classList.add('modal--open');
+      })
+        .catch (e => {
+           console.log(e)
+        });
+      })();
   }
 
   function closeModal() {
