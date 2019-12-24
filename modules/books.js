@@ -4,7 +4,9 @@ const  funcBooks = () => {
   // РАБОТА С КОРЗИНОЙ
   let cart = [];
 
-
+  if (localStorage.getItem('my-cart')) {
+    cart = JSON.parse(localStorage.getItem('my-cart'));
+  }
 
   let cartFlag = document.querySelector('.page-header__cart-num');
 
@@ -36,9 +38,6 @@ const  funcBooks = () => {
 
   // if (localStorge.getItem)
 
-  if (localStorage.getItem('my-cart')) {
-    cart = JSON.parse(localStorage.getItem('my-cart'));
-  }
 
   const addBook = (id) => {
     (async () => {
@@ -101,22 +100,24 @@ const  funcBooks = () => {
   }
 
   const catalog = document.querySelector('[data-catalog]');
+  if (catalog) {
+    catalog.addEventListener('click', e => {
+      const { target } = e;
+      const card = target.closest('.card');
+      const id = card.dataset.id
+      const button = card.querySelector('.card__buy');
+      const button_span = card.querySelector('.card__buy span');
 
-  catalog.addEventListener('click', e => {
-    const { target } = e;
-    const card = target.closest('.card');
-    const id = card.dataset.id
-    const button = card.querySelector('.card__buy');
-    const button_span = card.querySelector('.card__buy span');
+      console.log(target);
 
-    console.log(target);
+      if ( (card) && target != button && target != button_span) {
+        openModal(id);
+      } else if (card) {
+        addBook(id);
+      }
+    })
+  }
 
-    if ( (card) && target != button && target != button_span) {
-      openModal(id);
-    } else if (card) {
-      addBook(id);
-    }
-  })
 
   function renderBooks() {
     for (let i = 0; i < myCardsNum; i++) {
@@ -137,8 +138,9 @@ const  funcBooks = () => {
     }
   }
 
-  renderBooks();
-
+  if (myCatalog) {
+    renderBooks();
+  }
 
   // ОТКРЫТИЕ-ЗАКРЫТИЕ МЕНЮ ФИЛЬТРОВ
   let myFilters = document.querySelector('#filters');
