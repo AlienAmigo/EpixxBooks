@@ -28,12 +28,6 @@ const  funcCart = () => {
           that.open(e, popupHTML);
         });
       }
-            // this.open.bind(this) // или так
-      // Или
-      // this.trigger.addEventListener('click', (e) => {
-      //   this.open(e);
-      // });
-
       window.addEventListener("keyup", function(e) {
         if (e.key === 'Escape') {
           that.close();
@@ -78,6 +72,17 @@ const  funcCart = () => {
     myCard = JSON.parse(localStorage.getItem('my-cart'));
   }
 
+  const showCartFlag = (cart) => {
+    let cartFlag = document.querySelector('.page-header__cart-num');
+    let sum = 0;
+    if (cart.length) {
+      cart.forEach(item => {
+          sum += item.qty;
+      });
+    }
+    cartFlag.textContent = sum;
+  };
+
   // список сообщений popup
   const myMessages = {
     wrongQty: 'Можно заказать только от 1 до 10 единиц одного товара',
@@ -92,6 +97,7 @@ const  funcCart = () => {
   let myQtyFields = selectElements('.field-num__input'); // все поля кол-ва одного товара
   let myPriceFields = selectElements('.cart__item-price'); // все поля цены
   let myTotalPriceField = document.querySelector('.cart__products-price-num'); // поле суммарной цены заказа
+  let myResultPriceField = document.querySelector('.checkout__price'); // поле итоговой цены
 
   // let PromoCode = 10%;
   let myTotalPrice = 0; // Цена за все товары в корзине с учетом скидки промо-кода
@@ -150,8 +156,10 @@ const  funcCart = () => {
         myHTMLFragment.append(renderItem(item)); });
     }
     myHTMLFragment.append(renderFooter(calcTotalPrice(myCard))); //добавляем футер
+    myResultPriceField.textContent = convRUB(calcTotalPrice(myCard));
     myProductCartTable.append(myHTMLFragment);
     showTotalQty();
+    showCartFlag(Arr);
     refreshElements();
   }
   if (myProductCartTable) { renderCart(myCard); }
@@ -195,6 +203,7 @@ const  funcCart = () => {
   function deleteItem(ind) { //ф-ция удаления одного наименования
     myCard.splice(ind,1);
     localStorage.setItem('my-cart', JSON.stringify(myCard));
+    showCartFlag(myCard);
     renderCart(myCard);
   }
 
@@ -206,7 +215,9 @@ const  funcCart = () => {
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
       myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
       showTotalQty();
+      showCartFlag(myCard);
       myTotalPriceField.textContent = convRUB(calcTotalPrice(myCard));
+      myResultPriceField.textContent = convRUB(calcTotalPrice(myCard));
     }
     else {
       showAlert(myMessages.wrongQty);
@@ -216,9 +227,9 @@ const  funcCart = () => {
   function changeQtyField(ind, newQty) { // ф-ция изменения текстового поля кол-ва товара
     if (newQty.trim().match(/[\d]+/g)) { changeQty(ind, newQty); }
     else {
-     myQtyFields[ind].value = myCard[ind].qty;
-     showAlert(myMessages.wrongQtyFiledVal); }
-    myQtyFields[ind].value = myCard[ind].qty;
+      myQtyFields[ind].value = myCard[ind].qty;
+      showAlert(myMessages.wrongQtyFiledVal); }
+      myQtyFields[ind].value = myCard[ind].qty;
   }
 
   // очистка всей корзины
@@ -263,16 +274,6 @@ const myFormElem = [
 
 let myFieldCheckedStyle = 'field-text--input-checked';
 
-
-// вешаем обработчики событий на эл-ты формы
-// myFormElem.forEach((item, index) => {
-//   addEventListener('blur', function() {
-//     checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
-//   });
-//   addEventListener('change', function() {
-//     checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
-//   });
-// });
 
   // ВАЛИДАЦИЯ ФОРМЫ
   // эл-ты формы, собранные в массив

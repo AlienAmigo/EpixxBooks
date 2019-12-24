@@ -11,7 +11,13 @@ const  funcBooks = () => {
 
   const showCartFlag = (cart) => {
     let cartFlag = document.querySelector('.page-header__cart-num');
-    cartFlag.textContent = cart.length;
+    let sum = 0;
+    if (cart.length) {
+      cart.forEach(item => {
+          sum += item.qty;
+      });
+    }
+    cartFlag.textContent = sum;
   };
 
   showCartFlag(cart);
