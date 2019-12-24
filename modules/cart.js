@@ -282,32 +282,29 @@ let myFieldCheckedStyle = 'field-text--input-checked';
       e.preventDefault();
     });
 
-
     const cartElement = document.querySelector('.cart');
     cartElement.addEventListener('change', e => {
-        const { target } = e;
-        const elem = myFormElem.find( item => {
-          return (target.name == item.name);
-        } );
-
-        if (elem) {
-          checkFormField(elem.obj, elem.regExp, myFieldCheckedStyle, elem.msg);
-        }
-        console.log(e + ' : ' + target.name);
-        // const id = target.dataset.id;
+      checkFormFieldOnEvent(e);
+    });
+    cartElement.addEventListener('focus', e => {
+      checkFormFieldOnEvent(e);
     });
 
     cartElement.addEventListener('blur', e => {
-        const { target } = e;
-        const elem = myFormElem.find( item => {
-          return (target.name == item.name);
-        } );
-        console.log(e + ' : ' + target.name);
-        if (elem) {
-          checkFormField(elem.obj, elem.regExp, myFieldCheckedStyle, elem.msg);
-        }
+      checkFormFieldOnEvent(e);
     });
   }
+
+function checkFormFieldOnEvent(evt) {
+  const { target } = evt;
+  const elem = myFormElem.find( item => {
+    return (target.name == item.name);
+  } );
+  console.log(evt + ' : ' + target.name);
+  if (elem) {
+    checkFormField(elem.obj, elem.regExp, myFieldCheckedStyle, elem.msg);
+  }
+}
 
 function checkFormField(obj, regExp, okStyle, msg) { // ф-ция проверки поля ввода формы
   let myText = obj.value.trim();
