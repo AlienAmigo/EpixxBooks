@@ -1,8 +1,12 @@
 // КОРЗИНА
 let cart = [];
 
+const clearCart = () => {
+  localStorage.clear('my-cart');
+}
+
 const getCart = (cart) => {
-  cart = JSON.parse(localStorage.getItem('my-cart')) || [];
+  cart = JSON.parse(localStorage.getItem('my-cart'))/* || []*/;
   console.log(cart);
 };
 
@@ -42,6 +46,8 @@ const printData = (data) => {
     cart.push(book);
     setCart(cart);
   });
+
+  const button = cart.querySelector('');
 }
 
 const getBody = () => {
@@ -80,7 +86,6 @@ const getData = () => {
   })
   .then(json => {
     loader.style.display = 'none';
-    console.log(json);
     printData(json);
   })
   .catch(e => {
@@ -96,9 +101,9 @@ const getData = () => {
 
 
 const app = document.querySelector('#app');
-const btn = document.querySelector('.button');
+// const btn = document.querySelector('.button');
 const loader = document.querySelector('.loader');
-btn.addEventListener('click', getData);
+// btn.addEventListener('click', getData);
 
 getCart();
 

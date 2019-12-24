@@ -1,5 +1,77 @@
 const  funcBooks = () => {
 
+
+  // РАБОТА С КОРЗИНОЙ
+  let cart = [];
+
+
+
+  let cartFlag = document.querySelector('.page-header__cart-num');
+
+  const showCartFlag = (cart) => {
+    let cartFlag = document.querySelector('.page-header__cart-num');
+    cartFlag.textContent = cart.length;
+  };
+
+  showCartFlag(cart);
+  const clearCart = (cart) => {
+    cart = [];
+    localStorage.clear('my-cart');
+    showCartFlag(cart);
+  };
+
+  const getCart = (cart) => {
+    cart = JSON.parse(localStorage.getItem('my-cart'))/* || []*/;
+    console.log(cart);
+    showCartFlag(cart);
+  };
+
+  const setCart = (cart) => {
+    localStorage.setItem('my-cart', JSON.stringify(cart))
+    // localStorage.removeItem()
+    // localStorage.clear()
+    console.log(cart);
+    showCartFlag(cart);
+  };
+
+  // if (localStorge.getItem)
+
+  if (localStorage.getItem('my-cart')) {
+    cart = JSON.parse(localStorage.getItem('my-cart'));
+  }
+
+  const addBook = (id) => {
+    (async () => {
+      await fetch(url)
+        .then( response => {
+           return response.json()
+         })
+        .then( json => {
+          const book = json.filter( (item) => {
+            return (item.uri == id);
+          });
+
+          const index = cart.findIndex( (item) => {
+            return (item.uri === id);
+          });
+
+          if (index === -1) {
+            cart.push({...book[0], qty: 1});
+          }
+          else {
+            cart[index].qty += 1;
+          }
+          // cart.push({...book[0], qty: 1});
+          setCart(cart);
+          showCartFlag(cart);
+        })
+        .catch (e => {
+          console.log(e)
+        });
+    })();
+  }
+
+
   // ПОЛУЧЕНИЕ ДАННЫХ С СЕРВЕРА
   const url = '/data/data.json';
 
@@ -42,7 +114,7 @@ const  funcBooks = () => {
     if ( (card) && target != button && target != button_span) {
       openModal(id);
     } else if (card) {
-      addCart(id);
+      addBook(id);
     }
   })
 
@@ -94,17 +166,23 @@ const  funcBooks = () => {
           let card = json.find(elem => {
             return (elem.uri == item);
           });
+
         myModal.querySelector('.product__img-wrap img').src = `/img/books/${card["uri"]}.jpg`;
         myModal.querySelector('.product__img-wrap img').alt = card.name;
         myModal.querySelector('.product__title').textContent = card.name;
         // myModal.querySelector('#modal-author').textContent = card.author;
         myModal.querySelector('.product__descr').querySelector('p').textContent = card.desc;
-        myModal.querySelector('.btn--price').innerHTML = convRUB(card.price) + `                      <span class="btn__sm-text">
+        const btnBuy = myModal.querySelector('.btn--price');
+        btnBuy.innerHTML = convRUB(card.price) + `                      <span class="btn__sm-text">
                         <svg class="btn__icon" width="14" height="14">
                           <use xlink:href="#plus"></use>
                         </svg>
                         <span>В корзину</span>`;
+        btnBuy.addEventListener('click', function() {
+          addBook(item);
+        });
         myModal.classList.add('modal--open');
+
       })
         .catch (e => {
            console.log(e)
