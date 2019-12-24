@@ -154,8 +154,8 @@ const  funcCart = () => {
     showTotalQty();
     refreshElements();
   }
+  if (myProductCartTable) { renderCart(myCard); }
 
-  renderCart(myCard);
 
   function refreshElements() { //обновляет управляющие эл-ты
     myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +

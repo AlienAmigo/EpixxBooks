@@ -33,9 +33,6 @@ const  funcBooks = () => {
     showCartFlag(cart);
   };
 
-  // if (localStorge.getItem)
-
-
   const addBook = (id) => {
     (async () => {
       await fetch(url)
@@ -91,13 +88,31 @@ const  funcBooks = () => {
     myTmpNode.querySelector('.card__img').alt = item.name;
     myTmpNode.querySelector('.card__title').textContent = item.name;
     myTmpNode.querySelector('.card__price').textContent = convRUB(item.price);
-    // myTmpNode.addEventListener('click', showBookModal);
     return myTmpNode;
   }
 
   const catalog = document.querySelector('[data-catalog]');
   if (catalog) {
     catalog.addEventListener('click', e => {
+      const { target } = e;
+      const card = target.closest('.card');
+      const id = card.dataset.id
+      const button = card.querySelector('.card__buy');
+      const button_span = card.querySelector('.card__buy span');
+
+      console.log(target);
+
+      if ( (card) && target != button && target != button_span) {
+        openModal(id);
+      } else if (card) {
+        addBook(id);
+      }
+    })
+  }
+
+  const slider = document.querySelector('.popular__slider');
+  if (slider) {
+    slider.addEventListener('click', e => {
       const { target } = e;
       const card = target.closest('.card');
       const id = card.dataset.id
