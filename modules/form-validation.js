@@ -1,7 +1,3 @@
-  function showAlert(message) {
-    console.log(message);
-  }
-
 // эл-ты формы, собранные в массив
 const form = document.querySelector('.form');
 form.addEventListener('submit', e => {

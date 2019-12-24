@@ -123,6 +123,7 @@ const  funcCart = () => {
   function renderItem(item) {
     let myTmpNode = document.querySelector('.tmp__card-row').content.cloneNode(true);
     item.totalItemPrice = item.price * item.qty;
+    myTmpNode.querySelector('.cart__product').dataset.id = item.uri;
     myTmpNode.querySelector('.cart__item-name').textContent = item.name;
     myTmpNode.querySelector('.cart__item-img').src = `/img/books/${item['uri']}.jpg`;
     myTmpNode.querySelector('.cart__item-img').alt = item.uri;
@@ -155,15 +156,6 @@ const  funcCart = () => {
   }
 
   renderCart(myCard);
-
-  const cartElement = document.querySelector('.cart');
-  cartElement.addEventListener('change', e => {
-      const { target } = e;
-
-      const id = target.dataset.id;
-      validation(id);
-  });
-
 
   function refreshElements() { //обновляет управляющие эл-ты
     myPlusBtn = selectElements('.field-num__btn-plus'); //все кнопки +
@@ -240,6 +232,96 @@ const  funcCart = () => {
     localStorage.clear('my-cart');
     renderCart(myCard);
   }
+
+
+const myFormElem = [
+  {
+    name: 'firstname',
+    obj: document.querySelector('input[name="firstname"]'),
+    regExp: new RegExp(/^[А-Яа-яЁёA-Za-z]+$/gim),
+    msg: 'Нужно ввести корректное имя',
+  },
+  {
+    name: 'lastname',
+    obj: document.querySelector('input[name="lastname"]'), // поле фамилии,
+    regExp: new RegExp(/^[А-Яа-яЁёA-Za-z]+$/gim),
+    msg: 'Нужно ввести корректную фамилию',
+  },
+  {
+    name: 'phone',
+    obj: document.querySelector('input[type="tel"]'), // поле телефона
+    regExp: new RegExp(/(\+?\s?(\d)\s?\(?(\d{3})\)?\s?(\d{3})\s?\-?\s?(\d{2})\s?\-?\s?(\d{2}))/gim),
+    msg: 'Нужно ввести корректный номер телефона',
+  },
+  {
+    name: 'email',
+    obj: document.querySelector('input[type="email"]'), // поле email
+    regExp: new RegExp(/\b[\w\-\.$]+@[\w\-\.]+\.[a-z]{1,3}\b/gim),
+    msg: 'Нужно ввести корректный адрес электронной почты',
+  },
+];
+
+let myFieldCheckedStyle = 'field-text--input-checked';
+
+
+// вешаем обработчики событий на эл-ты формы
+// myFormElem.forEach((item, index) => {
+//   addEventListener('blur', function() {
+//     checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
+//   });
+//   addEventListener('change', function() {
+//     checkFormField(item.obj, item.regExp, myFieldCheckedStyle, item.msg);
+//   });
+// });
+
+  // ВАЛИДАЦИЯ ФОРМЫ
+  // эл-ты формы, собранные в массив
+  const form = document.querySelector('.form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+    });
+
+
+    const cartElement = document.querySelector('.cart');
+    cartElement.addEventListener('change', e => {
+        const { target } = e;
+        const elem = myFormElem.find( item => {
+          return (target.name == item.name);
+        } );
+
+        if (elem) {
+          checkFormField(elem.obj, elem.regExp, myFieldCheckedStyle, elem.msg);
+        }
+        console.log(e + ' : ' + target.name);
+        // const id = target.dataset.id;
+    });
+
+    cartElement.addEventListener('blur', e => {
+        const { target } = e;
+        const elem = myFormElem.find( item => {
+          return (target.name == item.name);
+        } );
+        console.log(e + ' : ' + target.name);
+        if (elem) {
+          checkFormField(elem.obj, elem.regExp, myFieldCheckedStyle, elem.msg);
+        }
+    });
+  }
+
+function checkFormField(obj, regExp, okStyle, msg) { // ф-ция проверки поля ввода формы
+  let myText = obj.value.trim();
+  let myParent = obj.parentElement;
+
+  if (myText.match(regExp)) {
+    myParent.classList.add(okStyle);
+  }
+  else {
+    myParent.classList.remove(okStyle);
+    showAlert(msg)
+  };
+};
+
 
 }
 export default funcCart;
