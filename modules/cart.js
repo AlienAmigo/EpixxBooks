@@ -70,7 +70,11 @@ const  funcCart = () => {
 
   popupLibrary.init();
 
-  const myCard = JSON.parse(localStorage.getItem('my-cart'));
+  let myCard = [];
+
+  if (localStorage.getItem('my-cart')) {
+    myCard = JSON.parse(localStorage.getItem('my-cart'));
+  }
 
   // список сообщений popup
   const myMessages = {
@@ -132,12 +136,16 @@ const  funcCart = () => {
     return myTmpNode;
   }
 
+
   // рендер всей корзины
   function renderCart(Arr) {
     myProductCartTable.innerHTML = ''; // удаляем предыдущие эл-ты из корзины
     let myHTMLFragment = document.createDocumentFragment();
     myHTMLFragment.append(document.querySelector('.tmp__table-header').content.cloneNode(true)); // добавляем шапку таблицы из шаблона
-    Arr.forEach((item) => { myHTMLFragment.append(renderItem(item)); }); // добавляем все товары из объекта
+    if (Arr.length) {
+      Arr.forEach((item) => { // добавляем все товары из объекта
+        myHTMLFragment.append(renderItem(item)); });
+    }
     myHTMLFragment.append(renderFooter(calcTotalPrice(myCard))); //добавляем футер
     myProductCartTable.append(myHTMLFragment);
     showTotalQty();
@@ -215,9 +223,16 @@ const  funcCart = () => {
     myQtyFields[ind].value = myCard[ind].qty;
   }
 
-  // очистка
-  function clearCart () {
+  // очистка всей корзины
+  let myCardClear = document.querySelector('.cart__clear-btn');
+  if (myCardClear) {
+    myCardClear.addEventListener('click', clearCart);
+  }
 
+  function clearCart () {
+    myCard = [];
+    localStorage.clear('my-cart');
+    renderCart(myCard);
   }
 
 }

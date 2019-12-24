@@ -23,7 +23,6 @@ const  funcBooks = () => {
 
   const getCart = (cart) => {
     cart = JSON.parse(localStorage.getItem('my-cart'))/* || []*/;
-    console.log(cart);
     showCartFlag(cart);
   };
 
@@ -31,7 +30,6 @@ const  funcBooks = () => {
     localStorage.setItem('my-cart', JSON.stringify(cart))
     // localStorage.removeItem()
     // localStorage.clear()
-    console.log(cart);
     showCartFlag(cart);
   };
 
@@ -59,7 +57,6 @@ const  funcBooks = () => {
           else {
             cart[index].qty += 1;
           }
-          // cart.push({...book[0], qty: 1});
           setCart(cart);
           showCartFlag(cart);
         })
