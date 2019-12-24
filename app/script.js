@@ -1,6 +1,7 @@
 import funcBooks from '../modules/books.js'
 import funcPopup from '../modules/popup.js'
 import funcSliders from '../modules/sliders.js'
+import funcCart from '../modules/cart.js'
 // import func
 
 ready(function(){
@@ -27,6 +28,8 @@ ready(function(){
 
   funcBooks();
   funcSliders();
+  funcPopup();
+  funcCart();
 
   // ВНИМАНИЕ!
   // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
@@ -69,16 +72,18 @@ ready(function(){
   }
 
   // Выбор диапазона цен
-  var slider = document.getElementById('price-range');
-  noUiSlider.create(slider, {
-    start: [400, 1000],
-    connect: true,
-    step: 100,
-    range: {
-      'min': 200,
-      'max': 2000
-    }
-  });
+  if (document.getElementById('price-range')) {
+    var slider = document.getElementById('price-range');
+    noUiSlider.create(slider, {
+      start: [400, 1000],
+      connect: true,
+      step: 100,
+      range: {
+        'min': 200,
+        'max': 2000
+      }
+    });
+  }
 
 });
 

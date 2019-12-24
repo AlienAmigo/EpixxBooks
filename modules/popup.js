@@ -20,11 +20,13 @@ const  funcPopup = () => {
         that.close(e);
       });
 
-      this.trigger = trig;
-      this.trigger.addEventListener('click', function(e) {
-        that.open(e, popupHTML);
-      });
-      // this.open.bind(this) // или так
+      if (trig) {
+        this.trigger = trig;
+        this.trigger.addEventListener('click', function(e) {
+          that.open(e, popupHTML);
+        });
+      }
+            // this.open.bind(this) // или так
       // Или
       // this.trigger.addEventListener('click', (e) => {
       //   this.open(e);

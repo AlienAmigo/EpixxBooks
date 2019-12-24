@@ -1,26 +1,76 @@
-ready(function(){
 
-  // В этом месте должен быть написан ваш код
-  const myCard = [
-    {
-      descr: "",
-      img: "img/tsennye-resheniya.jpg",
-      imgAlt: '',
-      name: "Название какие-то очень длинное, совершенно невменяемое для книгоиздателя",
-      price: 512,
-      qty: 2,
-      totalItemPrice: 1024,
+const  funcCart = () => {
+
+  const popupLibrary = {
+    popUp: null,
+    trigger: null,
+    popupClose: null,
+    isActive: false,
+
+    // инициализация popup
+    init(trig) {
+      // if (!this.isActive) return; // если уже активен, ничего не делаем
+      this.popUp = document.querySelector('.popup');
+      this.popUpWindow = document.querySelector('.popup-body');
+      const that = this;
+
+      this.popUp.addEventListener('click', function(e) { that.close(e); });
+      this.popUpWindow.addEventListener('click', function(e) { e.stopPropagation(); } );
+
+      this.popUpClose = document.querySelector('.popup-close');
+      this.popUpClose.addEventListener('click', function(e) {
+        that.close(e);
+      });
+
+      if (trig) {
+        this.trigger = trig;
+        this.trigger.addEventListener('click', function(e) {
+          that.open(e, popupHTML);
+        });
+      }
+            // this.open.bind(this) // или так
+      // Или
+      // this.trigger.addEventListener('click', (e) => {
+      //   this.open(e);
+      // });
+
+      window.addEventListener("keyup", function(e) {
+        if (e.key === 'Escape') {
+          that.close();
+        }
+      }, true);
     },
-    {
-      descr: "",
-      img: "img/tsennye-resheniya.jpg",
-      imgAlt: '',
-      name: "Название",
-      price: 999024,
-      qty: 1,
-      totalItemPrice: 999024,
+
+    // открытие popup
+    open(e,someHTML) {
+      if (someHTML) {
+        this.popUp
+          .querySelector('.popup-inner')
+          .innerHTML = someHTML;
+      }
+
+      this.popUp.style.display = 'block';
+      this.isActive = true;
+    },
+
+    // закрытие popup
+    close() {
+      console.log(this.popUp);
+      this.popUp.style.display = 'none';
+      this.isActive = false;
+    },
+
+    // сброс popup
+    reset() {
+      this.popUp = null;
+      this.trigger.removeEventListener('click', this.open);
+      this.trigger = null;
     }
-  ];
+  };
+
+  popupLibrary.init();
+
+  const myCard = JSON.parse(localStorage.getItem('my-cart'));
 
   // список сообщений popup
   const myMessages = {
@@ -40,9 +90,9 @@ ready(function(){
   // let PromoCode = 10%;
   let myTotalPrice = 0; // Цена за все товары в корзине с учетом скидки промо-кода
 
-  // ф-ция вызова popup'а (пока через alert)
+  // ф-ция вызова popup'а
   function showAlert(message) {
-    console.log(message);
+    popupLibrary.open('', message);
   }
 
   // подсчёт общего кол-ва единиц товаров в корзине
@@ -68,8 +118,8 @@ ready(function(){
     let myTmpNode = document.querySelector('.tmp__card-row').content.cloneNode(true);
     item.totalItemPrice = item.price * item.qty;
     myTmpNode.querySelector('.cart__item-name').textContent = item.name;
-    myTmpNode.querySelector('.cart__item-img').src = item.img;
-    myTmpNode.querySelector('.cart__item-img').alt = item.imgAlt;
+    myTmpNode.querySelector('.cart__item-img').src = `/img/books/${item['uri']}.jpg`;
+    myTmpNode.querySelector('.cart__item-img').alt = item.uri;
     myTmpNode.querySelector('.cart__item-price').textContent = convRUB(item.totalItemPrice);
     myTmpNode.querySelector('.field-num__input').value = item.qty;
     return myTmpNode;
@@ -165,64 +215,10 @@ ready(function(){
     myQtyFields[ind].value = myCard[ind].qty;
   }
 
-  // ВНИМАНИЕ!
-  // Нижеследующий код (кастомный селект и выбор диапазона цены) работает
-  // корректно и не вызывает ошибок в консоли браузера только на главной.
-  // Одна из ваших задач: сделать так, чтобы на странице корзины в консоли
-  // браузера не было ошибок.
+  // очистка
+  function clearCart () {
 
-  // Кастомные селекты (кроме выбора языка)
-  new Choices('.field-select:not(#lang) select.field-select__select', {
-    searchEnabled: false,
-    shouldSort: false,
-  });
-  // Кастомный селект выбора языка отдельно
-  new Choices('#lang select.field-select__select', {
-    searchEnabled: false,
-    shouldSort: false,
-    callbackOnCreateTemplates: function (template) {
-      return {
-        item: (classNames, data) => {
-          return template(`
-            <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>
-              ${getLangInSelectIcon(data.value)} ${data.label.substr(0,3)}
-            </div>
-          `);
-        },
-        choice: (classNames, data) => {
-          return template(`
-            <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}" ${data.groupId > 0 ? 'role="treeitem"' : 'role="option"'}>
-              ${getLangInSelectIcon(data.value)} ${data.label}
-            </div>
-          `);
-        },
-      };
-    }
-  });
-  function getLangInSelectIcon(value) {
-    if (value == 'ru') return '<span class="field-select__lang-ru"></span>';
-    else if (value == 'en') return '<span class="field-select__lang-en"></span>';
-    return '<span class="field-select__lang-null"></span>';
   }
 
-  // Выбор диапазона цен
-  var slider = document.getElementById('price-range');
-  noUiSlider.create(slider, {
-    start: [400, 1000],
-    connect: true,
-    step: 100,
-    range: {
-      'min': 200,
-      'max': 2000
-    }
-  });
-
-});
-
-function ready (fn) {
-  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading'){
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
 }
+export default funcCart;

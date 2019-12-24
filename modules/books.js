@@ -1,6 +1,5 @@
 const  funcBooks = () => {
 
-
   // РАБОТА С КОРЗИНОЙ
   let cart = [];
 
