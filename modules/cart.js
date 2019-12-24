@@ -68,7 +68,9 @@ const  funcCart = () => {
     }
   };
 
-  popupLibrary.init();
+  if (document.querySelector('.popup')) {
+    popupLibrary.init();
+  }
 
   let myCard = [];
 
@@ -174,7 +176,7 @@ const  funcCart = () => {
     myPlusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty+1); }) } );
     myMinusBtn.forEach( (item, index) => { item.addEventListener('click', function() { changeQty(index, myCard[index].qty-1); }) } );
     myDelBnt.forEach( (item, index) => { item.addEventListener('click', function() { deleteItem(index) }) } );
-    myQtyFields.forEach( (item, index) => { item.addEventListener('change', function() { changeQty(index, item.value) }) });
+    myQtyFields.forEach( (item, index) => { item.addEventListener('change', function() { changeQtyField(index, item.value) }) });
   }
 
   function showTotalQty(sum = calcTotalQty(myCard)) { //ф-ция перевывода заголовка с кол-вом товара
@@ -200,13 +202,15 @@ const  funcCart = () => {
 
   function deleteItem(ind) { //ф-ция удаления одного наименования
     myCard.splice(ind,1);
+    localStorage.setItem('my-cart', JSON.stringify(myCard));
     renderCart(myCard);
   }
 
   function changeQty(ind, newQty) {//общая ф-ция для изменения кол-ва товара
     if ((newQty >= 1) && (newQty <= 10)) {
-      myQtyFields[ind].value = newQty;
-      myCard[ind].qty = newQty;
+      myQtyFields[ind].value = +newQty;
+      myCard[ind].qty = +newQty;
+      localStorage.setItem('my-cart', JSON.stringify(myCard));
       myCard[ind].totalItemPrice = myCard[ind].qty * myCard[ind].price;
       myPriceFields[ind].textContent = convRUB(myCard[ind].totalItemPrice);
       showTotalQty();
@@ -219,7 +223,9 @@ const  funcCart = () => {
 
   function changeQtyField(ind, newQty) { // ф-ция изменения текстового поля кол-ва товара
     if (newQty.trim().match(/[\d]+/g)) { changeQty(ind, newQty); }
-    else { showAlert(myMessages.wrongQtyFiledVal); }
+    else {
+     myQtyFields[ind].value = myCard[ind].qty;
+     showAlert(myMessages.wrongQtyFiledVal); }
     myQtyFields[ind].value = myCard[ind].qty;
   }
 
